@@ -202,14 +202,19 @@ class MultiLayerPerceptron:
         while loss==np.inf or loss.value > 0.001:
             ypreds = [self(x) for x in xs]
             loss = sum((y - yout)**2 for y, yout in zip(ys, ypreds))
-            print(f"Loss: {loss.value}")
+            print(f"Loss: {loss.value:.5f}")
+
+            for p in self.params():
+                p.grad = 0.
+
             loss.propagate()
+
             for p in self.params():
                 descent = -0.01 * p.grad if loss.value < 1. else -0.1 * p.grad 
                 p.value += descent 
 
     def predict(self, xs):
-        return [self(x) for x in xs]
+        return [self(x).value for x in xs]
     
         
 
